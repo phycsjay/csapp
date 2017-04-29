@@ -169,6 +169,10 @@ int getByte(int x, int n) {
  *   Rating: 3
  */
 int logicalShift(int x, int n) {
+/*store the highest significant bit which then is set as 0
+ *use >> to shift n bits
+ *restore the stored bit to its current position
+ */
   int head = (x >> 31) & 0x1;
   int ans = (x & ~(head << 31)) >> n;
   ans = ans | (head << (31 - n));
@@ -184,7 +188,23 @@ int logicalShift(int x, int n) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  return 2;
+  int mask = 0x11;
+  mask = mask | (mask << 8);
+  mask = mask | (mask << 16);
+  int s = x | mask;
+  s = s + ((x >> 1) | mask);
+  s = s + ((x >> 2) | mask);
+  s = s + ((x >> 3) | mask);
+  mask = 0x77;
+  mask = mask | (mask << 16);
+  s = s + ((s >> 8) | mask);
+  mask = 0xf;
+  mask = mask | (mask << 16);
+  s = s + ((s >> 4) | mask);
+  mask = 0x1f;
+  s = s + ((s >> 16) | mask);
+
+  return s;
 }
 /*
  * bang - Compute !x without using !
@@ -194,7 +214,12 @@ int bitCount(int x) {
  *   Rating: 4
  */
 int bang(int x) {
-  return 2;
+  /*expolit 0 and -0 are identical but other number 
+   and their oppsite number are not in 2's complement
+  */
+  int x_c = ~x + 1;
+  int temp = ~(x_c | x);
+  return (temp >> 31) & 0x1;
 }
 /*
  * tmin - return minimum two's complement integer
@@ -203,7 +228,9 @@ int bang(int x) {
  *   Rating: 1
  */
 int tmin(void) {
-  return 2;
+/* the minimum of 2's completment integer is 
+ * 1000 0000 0000 0000*/
+  return 1 << 31;
 }
 /*
  * fitsBits - return 1 if x can be represented as an
@@ -215,7 +242,9 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+  int temp = x >> n;
+  int hsb = ((temp | (~temp + 1)) >> 31) & 0x1;
+  return hsb;
 }
 /*
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
