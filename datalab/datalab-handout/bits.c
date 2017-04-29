@@ -192,17 +192,17 @@ int bitCount(int x) {
   mask = mask | (mask << 8);
   mask = mask | (mask << 16);
   int s = x | mask;
-  s = s + ((x >> 1) | mask);
-  s = s + ((x >> 2) | mask);
-  s = s + ((x >> 3) | mask);
+  s = s + ((x >> 1) & mask);
+  s = s + ((x >> 2) & mask);
+  s = s + ((x >> 3) & mask);
   mask = 0x77;
   mask = mask | (mask << 16);
-  s = s + ((s >> 8) | mask);
+  s = (s & mask) + ((s >> 8) & mask);
   mask = 0xf;
   mask = mask | (mask << 16);
-  s = s + ((s >> 4) | mask);
+  s = (s & mask) + ((s >> 4) & mask);
   mask = 0x1f;
-  s = s + ((s >> 16) | mask);
+  s = (s & mask) + ((s >> 16) & mask);
 
   return s;
 }
