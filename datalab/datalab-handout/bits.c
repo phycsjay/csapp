@@ -191,7 +191,7 @@ int bitCount(int x) {
   int mask = 0x11;
   mask = mask | (mask << 8);
   mask = mask | (mask << 16);
-  int s = x | mask;
+  int s = x & mask;
   s = s + ((x >> 1) & mask);
   s = s + ((x >> 2) & mask);
   s = s + ((x >> 3) & mask);
@@ -213,7 +213,7 @@ int bitCount(int x) {
  *   Rating: 4
  */
 int bang(int x) {
-  /*exploit 0 and -0 are identical but other number 
+  /*exploit 0 and -0 are identical but other number
    and their oppsite number are not in 2's complement
   */
   int x_c = ~x + 1;
@@ -227,7 +227,7 @@ int bang(int x) {
  *   Rating: 1
  */
 int tmin(void) {
-/* the minimum of 2's completment integer is 
+/* the minimum of 2's completment integer is
  * 1000 0000 0000 0000*/
   return 1 << 31;
 }
@@ -253,7 +253,7 @@ int fitsBits(int x, int n) {
  *   Max ops: 15
  *   Rating: 2
  */
-int divpwr2(int x, int n) {    
+int divpwr2(int x, int n) {
     return x >> n;
 }
 /*
