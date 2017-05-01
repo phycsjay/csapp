@@ -242,7 +242,7 @@ int tmin(void) {
  */
 int fitsBits(int x, int n) {
     /*set the nth bit as 0 then right shift n bits*/
-  int temp = (x & ~(0x1 << 31)) >> n;
+  int temp = (x & ~(0x1 << 31)) >> (n-1);
   int hsb = ~(((temp | (~temp + 1)) >> 31) & 0x1);
   return hsb;
 }
@@ -251,16 +251,17 @@ int fitsBits(int x, int n) {
  *  Round toward zero
  *   Examples: divpwr2(15,1) = 7, divpwr2(-33,4) = -2
  *   Legal ops: ! ~ & ^ | + << >>
- *   
+ *
  *   Max ops: 15
  *   Rating: 2
- * 
+ *
  */
 int divpwr2(int x, int n) {
     /*arithmetic right shift is not round toward zero but smaller
     * exploit lowest significant bit to identify x's parity */
     int hsb = 0x1 & (x >> 31);
-    return (x >> n) + hsb;
+    int lsb = 0x1 & x;
+    return (x >> n) + (hsb & lsb);
 }
 /*
  * negate - return -x
@@ -281,7 +282,7 @@ int negate(int x) {
  */
 int isPositive(int x) {
   int y = ~x+1;
-  return (y >> 31) & 0x1;
+  return ((y >> 31) & 0x1) & ((x >> 31) & 0x1);
 }
 /*
  * isLessOrEqual - if x <= y  then return 1, else return 0
@@ -292,8 +293,11 @@ int isPositive(int x) {
  */
 int isLessOrEqual(int x, int y) {
   /*exploit 2's complement*/
-  int ans = y + (~x + 1);
-  return ~(ans >> 31) & 0x1;
+  int sx = (x >> 31) & 0x1;
+  int sy = (y >> 31) & 0x1;
+  int sx_nor_xy = (sx | sy) | ~(sx & sy);
+  int s_difference_y_x = ((y + (~x + 1)) >> 31) & 0x1;
+  return (sx_nor_xy & ~sy) | (~sx_nor_xy & s_difference_y_x);
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
