@@ -260,8 +260,7 @@ int divpwr2(int x, int n) {
     /*arithmetic right shift is not round toward zero but smaller
     * exploit lowest significant bit to identify x's parity */
     int hsb = 0x1 & (x >> 31);
-    int lsb = 0x1 & x;
-    return ((x & ~(lsb << 31)) >> n) | (hsb << (31 - n));
+    return (x >> n) + hsb;
 }
 /*
  * negate - return -x
