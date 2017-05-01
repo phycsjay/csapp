@@ -243,11 +243,10 @@ int tmin(void) {
 int fitsBits(int x, int n) {
     /*set the nth bit as 0 then right shift n bits*/
   int n1 = (n + (~0x1 + 1));
-  int temp = (x >> n1) << n1;
-  int hsb = (temp ^ (~temp + 1)) >> 31;
-  return hsb + !!(x ^ (0x1 << 31)) ;
+  int temp = x & ~(0x1 << 31);
+  temp = temp >> n1;
+  return temp + ((!!(x ^ (0x1 << 31))) | (n >> 5));
 }
-
 
 /*
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
