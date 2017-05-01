@@ -241,7 +241,8 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  int temp = x >> n;
+    /*set the nth bit as 0 then right shift n bits*/
+  int temp = (x & ~(0x1 << (n-1))) >> n;
   int hsb = ((temp | (~temp + 1)) >> 31) & 0x1;
   return hsb;
 }
@@ -250,11 +251,15 @@ int fitsBits(int x, int n) {
  *  Round toward zero
  *   Examples: divpwr2(15,1) = 7, divpwr2(-33,4) = -2
  *   Legal ops: ! ~ & ^ | + << >>
+ *   
  *   Max ops: 15
  *   Rating: 2
+ * 
  */
 int divpwr2(int x, int n) {
-    return x >> n;
+    /*arithmetic right shift is not round toward zero but smaller*/
+    int temp = 0x1 & (x >> 31);
+    return (x >> n) | (temp << (31 - n));
 }
 /*
  * negate - return -x
