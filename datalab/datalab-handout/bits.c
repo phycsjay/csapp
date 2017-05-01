@@ -242,7 +242,7 @@ int tmin(void) {
  */
 int fitsBits(int x, int n) {
     /*set the nth bit as 0 then right shift n bits*/
-  int temp = (x & ~(0x1 << (n-1))) >> n;
+  int temp = (x & ~(0x1 << 31)) >> n;
   int hsb = ~(((temp | (~temp + 1)) >> 31) & 0x1);
   return hsb;
 }
@@ -257,9 +257,11 @@ int fitsBits(int x, int n) {
  * 
  */
 int divpwr2(int x, int n) {
-    /*arithmetic right shift is not round toward zero but smaller*/
-    int temp = 0x1 & (x >> 31);
-    return ((x & ~(0x1 << 31)) >> n) | (temp << (31 - n));
+    /*arithmetic right shift is not round toward zero but smaller
+    * exploit lowest significant bit to identify x's parity */
+    int hsb = 0x1 & (x >> 31);
+    int lsb = 0x1 & x;
+    return ((x & ~(lsb << 31)) >> n) | (hsb << (31 - n));
 }
 /*
  * negate - return -x
