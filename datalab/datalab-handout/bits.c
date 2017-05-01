@@ -243,8 +243,8 @@ int tmin(void) {
 int fitsBits(int x, int n) {
     /*set the nth bit as 0 then right shift n bits*/
   int temp = (x & ~(0x1 << 31)) >> (n-1);
-  int hsb = ~(((temp | (~temp + 1)) >> 31) & 0x1);
-  return hsb;
+  int hsb = (((temp | (~temp + 1)) >> 31) & 0x1);
+  return !hsb;
 }
 /*
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -282,7 +282,7 @@ int negate(int x) {
  */
 int isPositive(int x) {
   int y = ~x+1;
-  return ((y >> 31) & 0x1) & ((x >> 31) & 0x1);
+  return ((y >> 31) & 0x1) & !((x >> 31) & 0x1);
 }
 /*
  * isLessOrEqual - if x <= y  then return 1, else return 0
@@ -295,9 +295,9 @@ int isLessOrEqual(int x, int y) {
   /*exploit 2's complement*/
   int sx = (x >> 31) & 0x1;
   int sy = (y >> 31) & 0x1;
-  int sx_nor_xy = (sx | sy) | ~(sx & sy);
+  int sx_nor_xy = (sx | sy) | (!(sx & sy));
   int s_difference_y_x = ((y + (~x + 1)) >> 31) & 0x1;
-  return (sx_nor_xy & ~sy) | (~sx_nor_xy & s_difference_y_x);
+  return (sx_nor_xy & (!sy)) | ((!sx_nor_xy) & s_difference_y_x);
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
