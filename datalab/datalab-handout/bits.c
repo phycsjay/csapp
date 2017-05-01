@@ -264,7 +264,7 @@ int divpwr2(int x, int n) {
     * exploit lowest significant bit to identify x's parity */
     int hsb = 0x1 & (x >> 31);
     int lsb = 0x1 & x;
-    return (x >> n) + (hsb & lsb & (!!n));
+    return (x >> n) + ((hsb + lsb) >> ((!n) + 1));
 }
 /*
  * negate - return -x
