@@ -245,7 +245,7 @@ int fitsBits(int x, int n) {
   int n1 = (n + (~0x1 + 1));
   int temp = (x >> n1) << n1;
   int hsb = (temp ^ (~temp + 1)) >> 31;
-  return hsb + (x ^ !!(0x1 << 31)) ;
+  return hsb + !!(x ^ (0x1 << 31)) ;
 }
 
 
