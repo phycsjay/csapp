@@ -243,9 +243,9 @@ int tmin(void) {
 int fitsBits(int x, int n) {
     /*set the nth bit as 0 then right shift n bits*/
   int n1 = (n + (~0x1 + 1));
-  int temp = x & ~(0x1 << 31);
-  temp = !(temp >> n1);
-  return (temp ^ (!(x ^ (0x1 << 31)))) | (n >> 5);
+  int temp = x >> n1;
+  return (!temp) | (!(~temp));
+
 }
 
 /*
