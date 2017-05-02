@@ -244,8 +244,8 @@ int fitsBits(int x, int n) {
     /*set the nth bit as 0 then right shift n bits*/
   int n1 = (n + (~0x1 + 1));
   int temp = x & ~(0x1 << 31);
-  temp = temp >> n1;
-  return temp + ((!!(x ^ (0x1 << 31))) | (n >> 5));
+  temp = !(temp >> n1);
+  return (temp ^ (!(x ^ (0x1 << 31)))) | (n >> 5);
 }
 
 /*
@@ -262,8 +262,9 @@ int divpwr2(int x, int n) {
     /*arithmetic right shift is not round toward zero but smaller
     * exploit lowest significant bit to identify x's parity */
     int hsb = 0x1 & (x >> 31);
-    int lsb = 0x1 & (x >> (n + (~0x1 +1) + (!n)));
-    return (x >> n) | ((hsb + lsb) >> ((!n) + 1));
+    int lsb = x << (31 + (~n +1));
+    lsb = ((lsb ^ (~lsb +1)) >> 31) & 0x1;
+    return (x >> n) + (hsb & lsb);
 }
 /*
  * negate - return -x
