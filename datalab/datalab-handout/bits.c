@@ -298,9 +298,9 @@ int isLessOrEqual(int x, int y) {
   /*exploit 2's complement*/
   int sx = (x >> 31) & 0x1;
   int sy = (y >> 31) & 0x1;
-  int sx_nor_xy = (sx | sy) | (!(sx & sy));
+  int sx_nor_xy = (sx | sy) & (!(sx & sy));
   int s_difference_y_x = ((y + (~x + 1)) >> 31) & 0x1;
-  return (sx_nor_xy & (!sy)) | ((!sx_nor_xy) & s_difference_y_x);
+  return (sx_nor_xy & (!sy)) | ((!sx_nor_xy) & (!s_difference_y_x));
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
