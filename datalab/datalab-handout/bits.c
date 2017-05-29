@@ -351,6 +351,7 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
+  if(x == 0) return 0;
   int i = 4;
   unsigned value = 0, temp = 0;
   unsigned x_b = x;
