@@ -322,6 +322,7 @@ int ilog2(int x) {
     temp = temp + value;
     return temp;
 }
+
 /*
  * float_neg - Return bit-level equivalent of expression -f for
  *   floating point argument f.
@@ -350,7 +351,27 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  return 2;
+  int i = 4;
+  unsigned value = 0, temp = 0;
+  unsigned x_b = x;
+  if(x < 0) x_b = -x;
+  unsigned s = x & 0x80000000;
+  while(i >= 0){
+    value = !!((x_b >> temp) >> (1 << i));
+    temp = temp + (value << i);
+    i = i-1;
+  }  
+  unsigned p = 0;
+  p = (temp + 127) << 23;
+  unsigned m = 0;
+  if(temp < 23)
+    m = x << (23 - temp);
+  else 
+    m = x >> (temp -23);
+  m = m & 0x007fffff;
+  return s + p + m;
+
+
 }
 /*
  * float_twice - Return bit-level equivalent of expression 2*f for
