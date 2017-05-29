@@ -351,7 +351,6 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  if(!x) return 0;
   if(x == 0x80000000) return 0xcf000000;
   int i = 4;
   unsigned value = 0, temp = 0;
@@ -365,12 +364,12 @@ unsigned float_i2f(int x) {
     i = i-1;
   }  
   unsigned p = 0;
-  p = (temp + 127) << 23;
+  if(x) p = (temp + 127) << 23;
   unsigned m = 0;
   value = x_b >> (temp -22);
   m = (value << 1) + (value & 0x1);
   if(temp <= 23) m = x_b << (23 - temp);
-  return s + p + m;
+  return s + p + (m & 0xff7fffff);
 
 
 }
