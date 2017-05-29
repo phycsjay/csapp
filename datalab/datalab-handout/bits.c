@@ -334,7 +334,9 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
-  unsigned of = uf ^ ((!!(uf ^ 0xfc00000)) << 31);
+  unsigned of;
+  if((uf & 0x7f800000) != 0x7f800000) of = uf ^ 0x80000000;
+  if((uf & 0x7f800000) == 0x7f800000) of = uf;
   return of;
 }
 
