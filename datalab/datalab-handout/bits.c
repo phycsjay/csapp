@@ -310,7 +310,17 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4
  */
 int ilog2(int x) {
-  return 2;
+    int value = !!(x >> 16);
+    int temp = value << 4;
+    value = !!((x >> temp) >> 8);
+    temp = temp + (value << 3);
+    value = !!((x >> temp)>> 4);
+    temp = temp + (value << 2);
+    value = !!((x >> temp) >> 2);
+    temp = temp + (value << 1);
+    value = !!((x >> temp) >> 1);
+    temp = temp + value;
+    return temp;
 }
 /*
  * float_neg - Return bit-level equivalent of expression -f for
@@ -324,8 +334,10 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return 2;
+  unsigned of = uf ^ ((!!(uf ^ 0xfc00000)) << 31);
+  return of;
 }
+
 /*
  * float_i2f - Return bit-level equivalent of expression (float) x
  *   Result is returned as unsigned int, but
