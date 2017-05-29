@@ -335,8 +335,8 @@ int ilog2(int x) {
  */
 unsigned float_neg(unsigned uf) {
   unsigned of;
-  if((uf & 0x7f800000) == 0x7f800000) of = uf;
-  if((uf & 0x7f800000) != 0x7f800000 && (uf == 0x7f800000))of = uf ^ 0x80000000;
+  if(uf != 0x7f800000 && ((uf & 0x7f800000) == 0x7f800000)) of = uf;
+  else of = uf ^ 0x80000000;
   return of;
 }
 
