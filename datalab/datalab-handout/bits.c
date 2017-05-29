@@ -369,7 +369,7 @@ unsigned float_i2f(int x) {
   unsigned m = 0;
   value = x_b >> (temp -22);
   m = (value << 1) + (value & 0x1);
-  if(temp < 23) m = x_b << (23 - temp);
+  if(temp <= 23) m = x_b << (23 - temp);
   return s + p + m;
 
 
