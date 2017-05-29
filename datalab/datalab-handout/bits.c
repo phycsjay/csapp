@@ -355,8 +355,9 @@ unsigned float_i2f(int x) {
   int i = 4;
   unsigned value = 0, temp = 0;
   unsigned x_b = x;
-  if(x < 0) x_b = -x;
   unsigned s = x & 0x80000000;
+  if(s) x_b = -x;
+
   while(i >= 0){
     value = !!((x_b >> temp) >> (1 << i));
     temp = temp + (value << i);
@@ -368,7 +369,7 @@ unsigned float_i2f(int x) {
   if(temp < 23)
     m = x_b << (23 - temp);
   else 
-    m = x_b >> (temp -23);
+    m = (x_b >> (temp -23)) + ((x_b >> (temp - 22)) & 0x1) ;
   m = m & 0x007fffff;
   return s + p + m;
 
