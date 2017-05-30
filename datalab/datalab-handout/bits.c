@@ -368,7 +368,7 @@ unsigned float_i2f(int x) {
 /* 30-18=12 ops*/
 
   unsigned m = 0;
-  if(temp > 23)m = (x_b >> (temp-23)) + (x_b >> (temp - 22) & 0x1);
+  if(temp > 23)m = (x_b >> (temp-23)) + (x_b >> (temp - 24) & 0x1);
   else m = x_b << (23 - temp);
   return s + p + m;
 }
