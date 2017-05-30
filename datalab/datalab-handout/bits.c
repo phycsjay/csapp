@@ -354,24 +354,24 @@ unsigned float_i2f(int x) {
   if(x == 0x80000000) return 0xcf000000;
   int i = 4;
   unsigned value = 0, temp = 0;
-  int x_b = x;
+  unsigned x_b = x;
   unsigned s = x & 0x80000000;
   if(s) x_b = -x;
-
   while(i >= 0){
     value = !!((x_b >> temp) >> (1 << i));
     temp = temp + (value << i);
     i = i-1;
   }  
   unsigned p = 0;
-  if(x) p = (temp + 127) << 23;
+  if(x) p = (temp + 126) << 23;
   unsigned m = 0;
-  value = x_b >> (temp -22);
-  m = (value << 1) + (value & 0x1);
-  if(temp <= 23) m = (x_b << (23 - temp)) & 0xff7fffff;
+  int c = temp -22;
+  if(temp > 23){
+    value = x_b >> c;
+    m = (value << 1) + (value & 0x1);
+  }
+  else m = x_b << (1-c);
   return s + p + m;
-
-
 }
 /*
  * float_twice - Return bit-level equivalent of expression 2*f for
