@@ -354,7 +354,7 @@ unsigned float_i2f(int x) {
   if(x == 0x80000000) return 0xcf000000;
   int i = 4;
   unsigned value = 0, temp = 0;
-  unsigned x_b = x;
+  int x_b = x;
   unsigned s = x & 0x80000000;
   if(s) x_b = -x;
 
