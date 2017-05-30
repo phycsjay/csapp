@@ -364,13 +364,12 @@ unsigned float_i2f(int x) {
   }  
   unsigned p = 0;
   if(x) p = (temp + 126) << 23;
+
+/* 30-18=12 ops*/
+
   unsigned m = 0;
-  int c = temp -22;
-  if(temp > 23){
-    value = x_b >> c;
-    m = (value << 1) + (value & 0x1);
-  }
-  else m = x_b << (1-c);
+  if(temp > 23)m = (x_b >> (temp-23)) + (x_b >> (temp - 22) & 0x1);
+  else m = x_b << (23 - temp);
   return s + p + m;
 }
 /*
