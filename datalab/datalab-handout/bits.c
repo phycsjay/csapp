@@ -365,13 +365,22 @@ unsigned float_i2f(int x) {
   unsigned p = 0;
   if(x) p = (temp + 126) << 23;
 
-/* 30-18=12 ops*/
+/* 30-18=12 ops       or -14*/
 
   unsigned m = 0;
-  if(temp > 23)m = (x_b >> (temp-23)) + ((x_b >> (temp - 24)) & 0x3);
-  else m = x_b << (23 - temp);
+  int c = temp - 23;
+  if(c > 0){
+    m = x_b >> c;
+    //round rule
+    temp=x_b << (31-c);
+    if((temp<<1) > 0x80000000) m++;
+    if(temp == 0xc0000000) m++;
+
+  }
+  else m = x_b << (-c);
   return s + p + m;
 }
+
 /*
  * float_twice - Return bit-level equivalent of expression 2*f for
  *   floating point argument f.
